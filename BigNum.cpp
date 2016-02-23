@@ -41,11 +41,57 @@ void BigNum::output(){
     }
 }
 
-BigNum operator+(const BigNum& a,const BigNum& b){
+bool BigNum::isZero(){
+    int i;
+    for( i = 0; i < 1000 && num[i] == '0'; ++i );
+    return ( i == 1000);
 }
 
-BigNum operator-(const BigNum& a,const BigNum& b){
+BigNum operator+(const BigNum& a,const BigNum& b){
+    //addition table
+    BigNum carry;
+    BigNum res;
 
+    for( int i = 999; i >= 1; --i ){
+        int x = (a.num[i]-'0')+(b.num[i]-'0');
+        int n = x % 10;
+        int c  = x / 10;
+        res.num[i] = '0' + n;
+        carry.num[i-1] = '0' + c;
+    }
+
+    if( carry.isZero())
+        return res;
+    else
+        return carry + res;
+}
+
+
+BigNum operator-(const BigNum& a,const BigNum& b){
+    //addition table
+    // use subtract by adding trick
+    // https://www.youtube.com/watch?v=PS5p9caXS4U
+    BigNum res;
+    BigNum carry;
+
+    int i = 0;
+
+    for( ; i < 1000 && b.num[i] == '0' && a.num[i] == '0'; ++ i);
+    for( ; i < 999; ++ i ){
+        res.num[i] = '9' - b.num[i] + '0';
+    }
+    res.num[999] = ':' - b.num[i] + '0';
+    if( b.num[i] == '0' ){
+        carry.num[998] = '1';
+        res.num[999] = '0';
+    }
+
+
+    BigNum res2 = res + a + carry;
+    i = 0;
+    for( ; i < 1000 && res2.num[i] == '0'; ++ i);
+    res2.num[i] = '0';
+    return res2;
 }
 
 BigNum operator*(const BigNum& a,const BigNum& b){

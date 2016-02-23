@@ -1,9 +1,11 @@
 #include "BigNum.h"
 
 int main(){
-    BigNum n;
+    BigNum n, n2;
     n.input();
-    n.output();
+    n2.input();
+    BigNum n3 = n - n2;
+    n3.output();
 
     return 0;
 }

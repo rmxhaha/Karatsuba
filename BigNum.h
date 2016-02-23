@@ -11,6 +11,7 @@ public:
 
     void input();
     void output();
+    bool isZero();
 
     friend BigNum operator+(const BigNum& a,const BigNum& b);
     friend BigNum operator-(const BigNum& a,const BigNum& b);
