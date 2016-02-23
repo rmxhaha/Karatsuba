@@ -104,7 +104,24 @@ BigNum operator-(const BigNum& a,const BigNum& b){
     return res2;
 }
 
-void kali3(BigNum& out, const BigNum& a, const BigNum& b, int sa, int sb, int n){
+
+void BigNum::div10(int n){
+    int b = beg();
+    int i = 999;
+    int k = i - n;
+
+    while( b <= k ){
+        num[i] = num[k];
+        k--;
+        i--;
+    }
+    for( ; k <= i; ++k ){
+        num[k] = '0';
+    }
+}
+
+BigNum kali3(const BigNum& a, const BigNum& b, int n){
+
 }
 
 BigNum operator*(const BigNum& a,const BigNum& b){

@@ -14,7 +14,9 @@ public:
     bool isZero();
     int len();
     int beg();
+    void div10(int);
 
+    friend BigNum kali3(const BigNum& a, const BigNum& b, int n);
     friend BigNum operator+(const BigNum& a,const BigNum& b);
     friend BigNum operator-(const BigNum& a,const BigNum& b);
     friend BigNum operator*(const BigNum& a,const BigNum& b);
