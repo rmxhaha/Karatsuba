@@ -54,9 +54,7 @@ void BigNum::output(){
 }
 
 bool BigNum::isZero(){
-    int i;
-    for( i = 0; i < 1000 && num[i] == '0'; ++i );
-    return ( i == 1000);
+    return (beg()== 1000);
 }
 
 BigNum operator+(const BigNum& a,const BigNum& b){
