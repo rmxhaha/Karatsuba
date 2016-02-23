@@ -16,6 +16,16 @@ BigNum::BigNum(const BigNum& b){
         num[i] = b.num[i];
 }
 
+int BigNum::len(){
+    return 1000 - beg();
+}
+
+int BigNum::beg(){
+    int i = 0;
+    for( ; i < 1000 && num[i] == '0'; ++ i );
+    return i;
+}
+
 void BigNum::input(){
     std::string str;
     std::getline(std::cin,str);
@@ -92,6 +102,9 @@ BigNum operator-(const BigNum& a,const BigNum& b){
     for( ; i < 1000 && res2.num[i] == '0'; ++ i);
     res2.num[i] = '0';
     return res2;
+}
+
+void kali3(BigNum& out, const BigNum& a, const BigNum& b, int sa, int sb, int n){
 }
 
 BigNum operator*(const BigNum& a,const BigNum& b){
