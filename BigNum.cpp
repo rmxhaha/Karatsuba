@@ -42,8 +42,10 @@ void BigNum::input(){
 }
 
 void BigNum::output(){
-    int i;
-    for( i = 0; i < 1000 && num[i] == '0'; ++i );
+    int i = beg();
+    if( i == 1000 ){
+        std::cout << 0 << std::endl;
+    }
 
     while( i < 1000 ){
         std::cout << num[i];
