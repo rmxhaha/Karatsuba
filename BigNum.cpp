@@ -2,37 +2,68 @@
 #include <cstring>
 #include <string>
 #include <iostream>
+#include <cmath>
 
 
 BigNum::BigNum(){
-    for( int i = 0; i < 1000; ++ i)
+    for( int i = 0; i < L; ++ i)
         num[i] = '0';
 }
 
 BigNum::~BigNum(){}
 
 BigNum::BigNum(const BigNum& b){
-    for( int i = 0; i < 1000; ++ i )
+    for( int i = 0; i < L; ++ i )
         num[i] = b.num[i];
 }
 
-int BigNum::len(){
-    return 1000 - beg();
+int BigNum::len() const {
+    return L - beg();
 }
 
-int BigNum::beg(){
+int BigNum::beg() const {
     int i = 0;
-    for( ; i < 1000 && num[i] == '0'; ++ i );
+    for( ; i < L && num[i] == '0'; ++ i );
     return i;
+}
+
+std::ostream& operator<<(std::ostream& out, const BigNum& b){
+    int i = b.beg();
+    if( i == L ){
+        out << 0;
+    }
+
+    while( i < L ){
+        out << b.num[i];
+        ++i;
+    }
+    return out;
+}
+
+std::istream& operator>>(std::istream& in, BigNum& b){
+    std::string str;
+    in >> str;
+    int l = str.length();
+    if( l > L ) l = L;
+
+    int i = L-1;
+    for( int k = l; k--; --i){
+        b.num[i] = str[k];
+    }
+
+    while(i--)
+        b.num[i] = '0';
+
+    return in;
 }
 
 void BigNum::input(){
     std::string str;
     std::getline(std::cin,str);
     int l = str.length();
-    if( l > 1000 ) l = 1000;
+    if( l > L ) l = L;
 
-    int i = 999;
+    int i = L-1;
     for( int k = l; k--; --i){
         num[i] = str[k];
     }
@@ -43,18 +74,18 @@ void BigNum::input(){
 
 void BigNum::output(){
     int i = beg();
-    if( i == 1000 ){
-        std::cout << 0 << std::endl;
+    if( i == L ){
+        std::cout << 0;
     }
 
-    while( i < 1000 ){
+    while( i < L ){
         std::cout << num[i];
         ++i;
     }
 }
 
-bool BigNum::isZero(){
-    return (beg()== 1000);
+bool BigNum::isZero() const {
+    return (beg()== L);
 }
 
 BigNum operator+(const BigNum& a,const BigNum& b){
@@ -62,7 +93,7 @@ BigNum operator+(const BigNum& a,const BigNum& b){
     BigNum carry;
     BigNum res;
 
-    for( int i = 999; i >= 1; --i ){
+    for( int i = L-1; i >= 1; --i ){
         int x = (a.num[i]-'0')+(b.num[i]-'0');
         int n = x % 10;
         int c  = x / 10;
@@ -86,20 +117,20 @@ BigNum operator-(const BigNum& a,const BigNum& b){
 
     int i = 0;
 
-    for( ; i < 1000 && b.num[i] == '0' && a.num[i] == '0'; ++ i);
-    for( ; i < 999; ++ i ){
+    for( ; i < L && b.num[i] == '0' && a.num[i] == '0'; ++ i);
+    for( ; i < L-1; ++ i ){
         res.num[i] = '9' - b.num[i] + '0';
     }
-    res.num[999] = ':' - b.num[i] + '0';
+    res.num[L-1] = ':' - b.num[i] + '0';
     if( b.num[i] == '0' ){
-        carry.num[998] = '1';
-        res.num[999] = '0';
+        carry.num[L-2] = '1';
+        res.num[L-1] = '0';
     }
 
 
     BigNum res2 = res + a + carry;
     i = 0;
-    for( ; i < 1000 && res2.num[i] == '0'; ++ i);
+    for( ; i < L && res2.num[i] == '0'; ++ i);
     res2.num[i] = '0';
     return res2;
 }
@@ -107,7 +138,7 @@ BigNum operator-(const BigNum& a,const BigNum& b){
 
 void BigNum::div10(int n){
     int b = beg();
-    int i = 999;
+    int i = L-1;
     int k = i - n;
 
     while( b <= k ){
@@ -120,10 +151,80 @@ void BigNum::div10(int n){
     }
 }
 
-BigNum kali3(const BigNum& a, const BigNum& b, int n){
+void BigNum::mod10(int n){
+    int b = beg();
+    int i = L-1 - n;
+    while( b <= i ){
+        num[i] = '0';
+        --i;
+    }
+}
+
+void BigNum::multiply10(int n){
+    int k = beg();
+    int i = k - n;
+    while( k < L ){
+        num[i] = num[k];
+        ++k;
+        ++i;
+    }
+    while( i < L ){
+        num[i] = '0';
+        ++i;
+    }
 
 }
 
+
+BigNum kali3(const BigNum& x, const BigNum& y){
+    int n = x.len();
+    if( n < y.len()) n = y.len();
+
+    if( n <= 1 ){
+        int q = (x.num[L-1] - '0')*(y.num[L-1] - '0');
+        BigNum b;
+        b.num[L-1] = q % 10 + '0';
+        b.num[L-2] = q / 10 + '0';
+
+        return b;
+    }
+    int s = n - n / 2;
+    BigNum a(x); a.div10(s);
+    BigNum b(x); b.mod10(s);
+    BigNum c(y); c.div10(s);
+    BigNum d(y); d.mod10(s);
+
+/*
+    std::cout << "================\n";
+    a.output(); std::cout << std::endl;
+    b.output(); std::cout << std::endl;
+    c.output(); std::cout << std::endl;
+    d.output(); std::cout << std::endl;
+    std::cout << "================\n";
+*/
+
+    BigNum p = kali3(a,c); p.multiply10(s*2);
+//    std::cout << "p=" ;p.output(); std::cout << std::endl;
+    BigNum q = kali3(a,d); q.multiply10(s);
+//    std::cout << "q=" ;q.output(); std::cout << std::endl;
+    BigNum r = kali3(b,c); r.multiply10(s);
+//    std::cout << "r=" ;r.output(); std::cout << std::endl;
+    BigNum sss = kali3(b,d);
+//    std::cout << "s=";sss.output(); std::cout << std::endl;
+//    std::cout << "================\n";
+    return p + q + r + sss;
+/*
+    BigNum p = kali3(a,c,ss); p.multiply10(n);
+    BigNum q = kali3(b,d,ss);
+    BigNum r = kali3(a+b,c+d,ss);
+    r = r - p - q;
+    r.multiply10(ss);
+
+
+    return p + r + q;
+*/}
+
 BigNum operator*(const BigNum& a,const BigNum& b){
+    return kali3(a,b);
 
 }
