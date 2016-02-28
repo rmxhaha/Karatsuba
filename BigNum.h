@@ -30,6 +30,7 @@ public:
     friend BigNum operator*(const BigNum& a,const BigNum& b);
 private:
     char num[L];
+    bool positive; // false if negative
 };
 
 

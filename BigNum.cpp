@@ -8,6 +8,7 @@
 BigNum::BigNum(){
     for( int i = 0; i < L; ++ i)
         num[i] = '0';
+    positive = true;
 }
 
 BigNum::~BigNum(){}
@@ -15,6 +16,7 @@ BigNum::~BigNum(){}
 BigNum::BigNum(const BigNum& b){
     for( int i = 0; i < L; ++ i )
         num[i] = b.num[i];
+    positive = b.positive;
 }
 
 int BigNum::len() const {
@@ -28,11 +30,12 @@ int BigNum::beg() const {
 }
 
 std::ostream& operator<<(std::ostream& out, const BigNum& b){
+    if( !b.positive ) out << "-";
+
     int i = b.beg();
     if( i == L ){
         out << 0;
     }
-
     while( i < L ){
         out << b.num[i];
         ++i;
@@ -47,7 +50,16 @@ std::istream& operator>>(std::istream& in, BigNum& b){
     if( l > L ) l = L;
 
     int i = L-1;
-    for( int k = l; k--; --i){
+    int flimit;
+    if( str[0] == '-' ){
+        flimit = 1;
+        b.positive = false;
+    }
+    else {
+        flimit = 0;
+        b.positive = true;
+    }
+    for( int k = l; k-- != flimit; --i){
         b.num[i] = str[k];
     }
 
@@ -122,11 +134,10 @@ BigNum operator-(const BigNum& a,const BigNum& b){
         res.num[i] = '9' - b.num[i] + '0';
     }
     res.num[L-1] = ':' - b.num[i] + '0';
-    if( b.num[i] == '0' ){
+    if( b.num[L-1] == '0' ){
         carry.num[L-2] = '1';
         res.num[L-1] = '0';
     }
-
 
     BigNum res2 = res + a + carry;
     i = 0;
@@ -203,16 +214,22 @@ BigNum kali3(const BigNum& x, const BigNum& y){
     std::cout << "================\n";
 */
 
-    BigNum p = kali3(a,c); p.multiply10(s*2);
+    BigNum p = kali3(a,c);
 //    std::cout << "p=" ;p.output(); std::cout << std::endl;
-    BigNum q = kali3(a,d); q.multiply10(s);
+    BigNum q = kali3(b,d);
 //    std::cout << "q=" ;q.output(); std::cout << std::endl;
-    BigNum r = kali3(b,c); r.multiply10(s);
+    BigNum r = kali3(a+b,c+d);
 //    std::cout << "r=" ;r.output(); std::cout << std::endl;
-    BigNum sss = kali3(b,d);
+    r = r - p;
+//    std::cout << "r=" ;r.output(); std::cout << std::endl;
+    r = r - q;
+//    std::cout << "r=" ;r.output(); std::cout << std::endl;
+    p.multiply10(s*2);
+    r.multiply10(s);
+//    BigNum sss = kali3(b,d);
 //    std::cout << "s=";sss.output(); std::cout << std::endl;
 //    std::cout << "================\n";
-    return p + q + r + sss;
+    return p + q + r;
 /*
     BigNum p = kali3(a,c,ss); p.multiply10(n);
     BigNum q = kali3(b,d,ss);
