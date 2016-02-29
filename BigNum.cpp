@@ -121,7 +121,33 @@ bool BigNum::isZero() const {
 }
 
 BigNum operator+(const BigNum& a,const BigNum& b){
-    //addition table
+   if( a.positive ){
+        if( b.positive ){
+            // do nothing
+        }
+        else {
+            BigNum tb = b;
+            tb.positive = true;
+            return a-tb;
+        }
+   }
+   else {
+        if( b.positive ){
+            BigNum ta = a;
+            ta.positive = true;
+            return b-ta;
+        }
+        else {
+            BigNum ta = a;
+            BigNum tb = b;
+            ta.positive = true;
+            tb.positive = true;
+            BigNum r = ta + tb;
+            r.positive = false;
+            return r;
+        }
+   }
+     //addition table
     BigNum carry;
     BigNum res;
 
@@ -141,6 +167,38 @@ BigNum operator+(const BigNum& a,const BigNum& b){
 
 
 BigNum operator-(const BigNum& a,const BigNum& b){
+    if( a.positive ){
+        if( b.positive ){
+            if( compare(a,b) == 1 ){ // a < b
+                BigNum ta = a;
+                BigNum tb = b;
+                ta.positive = true;
+                tb.positive = true;
+                BigNum r = tb-ta;
+                r.positive = false;
+                return r;
+            }
+        }
+        else { //a - (-b)
+            BigNum tb = b;
+            tb.positive = true;
+            return a+tb;
+        }
+    }
+    else {
+        if( b.positive ){ // -a-b
+            return a+b;
+        }
+        else { // -a -(-b)
+            BigNum tb = b;
+            BigNum ta = a;
+            tb.positive = true;
+            ta.positive = true;
+            return tb - ta;
+        }
+    }
+
+
     //addition table
     // use subtract by adding trick
     // https://www.youtube.com/watch?v=PS5p9caXS4U
