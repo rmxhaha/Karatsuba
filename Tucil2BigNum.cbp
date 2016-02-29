@@ -31,6 +31,9 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="BigNum.cpp" />
+		<Unit filename="BigNum.h" />
+		<Unit filename="mbig.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
