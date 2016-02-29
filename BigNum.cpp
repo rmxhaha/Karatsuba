@@ -4,6 +4,26 @@
 #include <iostream>
 #include <cmath>
 
+// this doesn't compare the sign
+int compare(const BigNum& a,const BigNum& b){
+    int ba = a.beg();
+    int bb = b.beg();
+    if( ba < bb )
+        return -1;
+    else if( ba > bb )
+        return 1;
+    else{
+        for( ; bb < L; ++ bb ){
+            if( a.num[bb] < b.num[bb] )
+                return 1;
+            else if( a.num[bb] > b.num[bb] )
+                return -1;
+        }
+
+        return 0;
+    }
+}
+
 
 BigNum::BigNum(){
     for( int i = 0; i < L; ++ i)

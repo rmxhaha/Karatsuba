@@ -28,6 +28,8 @@ public:
     friend BigNum operator+(const BigNum& a,const BigNum& b);
     friend BigNum operator-(const BigNum& a,const BigNum& b);
     friend BigNum operator*(const BigNum& a,const BigNum& b);
+
+    friend int compare(const BigNum& a,const BigNum& b); // this doesn't compare the sign
 private:
     char num[L];
     bool positive; // false if negative
