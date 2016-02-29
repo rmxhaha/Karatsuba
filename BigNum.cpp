@@ -320,6 +320,7 @@ BigNum kali3(const BigNum& x, const BigNum& y){
 */}
 
 BigNum operator*(const BigNum& a,const BigNum& b){
-    return kali3(a,b);
-
+    BigNum r = kali3(a,b);
+    r.positive = !(!a.positive ^ !b.positive);
+    return r;
 }
